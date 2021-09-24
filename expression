@@ -1,0 +1,73 @@
+package calculate;
+
+import java.util.Random;
+
+public class expression {
+     public String[] createFormula(int r){
+         Random random = new Random();
+         String[] operator = {"＋","－","×","÷","＝"};
+         String[] Operator=new String[1+ random.nextInt(3)];//符号的个数
+         String[] Fraction=new String[Operator.length+1];//数字的个数比符号多1
+         String formula=new String();
+         boolean hasFraction=false;
+         for(int i=0;i< Fraction.length;i++){
+             int fractionOrNot = random.nextInt(2);//是否是分数
+             if(fractionOrNot==0){//不是分数
+                 int integralPart= random.nextInt(r+1);//整数部分0~r
+                 Fraction[i]=String.valueOf(integralPart);
+             }
+             else{
+                 int denominator = 1+random.nextInt(r);//分母不为0
+                 int molecule = random.nextInt(denominator);//分子
+                 int integralPart = random.nextInt(r+1);//整数部分
+                 if(molecule!=0){
+                     int s = Factor(denominator, molecule);//最大公约数
+                     denominator/=s;
+                     molecule/=s;
+                 }
+                 if(integralPart==0&&molecule>0){
+                     Fraction[i] = molecule + "/" + denominator;
+                     hasFraction = true;
+                 }
+                 else if(molecule==0){
+                     Fraction[i]=String.valueOf(integralPart);
+                 }
+                 else{
+                     Fraction[i]=integralPart+"'"+molecule+"/"+denominator;
+                     hasFraction = true;
+                 }
+             }
+         }
+         for(int i=0;i<Operator.length;i++){//有分数就不再进行乘除运算了
+             if (hasFraction)
+                 Operator[i] = operator[random.nextInt(2)];
+             else
+                 Operator[i] = operator[random.nextInt(4)];
+         }
+         int a = 0;//添加括号
+         if (Fraction.length != 2 )//只有两个数字就不加括号
+             a = random.nextInt(Fraction.length);
+         for (int i=0;i<Fraction.length;i++) {
+             if (i == a && a<Operator.length) {
+                 formula = formula + "(" + Fraction[i] + Operator[i] ;
+             } else if (i == a+1 && a<Operator.length && i == Fraction.length - 1) {
+                 formula = formula + Fraction[i] + ")" + "=";
+             } else if (i == a+1 && a<Operator.length) {
+                 formula = formula + Fraction[i] + ")" + Operator[i];
+             } else if (i == Fraction.length - 1) {
+                 formula = formula + Fraction[i] + "=";
+             } else {
+                 formula = formula + Fraction[i] + Operator[i];
+             }
+         }
+     }
+    public int Factor(int x,int y) {//求最大公约数
+        while(true)
+        {
+            if(x%y==0)return y;
+            int temp=y;
+            y=x%y;
+            x=temp;
+        }
+    }
+}
