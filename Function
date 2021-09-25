@@ -1,0 +1,59 @@
+package calculate;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+
+public class Function {
+    public void createProblemSet(int n, int r) {
+        Check temporarySet = new Check();
+        ArrayList returnList = temporarySet.generate(n, r);
+        ArrayList<String> txtList = new ArrayList<>();
+        ArrayList<String> ansList = new ArrayList<>();
+        for (int i = 0; i < 2 * n; i++) {
+            if (i < n) txtList.add(returnList.get(i).toString());
+            else ansList.add(returnList.get(i).toString());
+        }
+        createExeFile(txtList);
+        createAnsFile(ansList);
+    }
+
+    private void createExeFile(ArrayList txtList) {
+        try {
+            File exTXT = new File("/Exercises.txt");
+            FileOutputStream txtFile = new FileOutputStream(exTXT);
+            PrintStream q = new PrintStream(exTXT);
+
+            for (int i = 0; i < txtList.size(); i++) {
+                q.println(i + 1 + ". " + txtList.get(i));
+                System.out.println(i + 1 + ". " + txtList.get(i));
+            }
+
+            txtFile.close();
+            q.close();
+            System.out.println("已创建Exercises.txt");
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+
+    private void createAnsFile(ArrayList ansList) {
+        try {
+            File ansTXT = new File("/Answer.txt");
+            FileOutputStream ansFile = new FileOutputStream(ansTXT);
+            PrintStream p = new PrintStream(ansTXT);
+            p.println("答案：\n");
+
+            for (int i = 0; i < ansList.size(); i++) {
+                p.println(i + 1 + ". " + ansList.get(i));
+            }
+            ansFile.close();
+            p.close();
+            System.out.println("已创建Answer.txt");
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+}
