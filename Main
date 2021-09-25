@@ -1,0 +1,17 @@
+package calculate;
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args){
+        while(true) {
+            System.out.println("请输入生成题目数");
+            Scanner sc=new Scanner(System.in);
+            int n=sc.nextInt();
+            System.out.println("请输入生成题目参数范围");
+            int r=sc.nextInt();
+            Function makefile = new Function();
+            makefile.createProblemSet(n,r);
+        }
+    }
+}
