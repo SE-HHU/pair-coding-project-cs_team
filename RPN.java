@@ -15,7 +15,7 @@ public class RPN {
         ArrayList<String> stringArray = toStringArray(equation);
 
         for (String i : stringArray) {
-            if(isDigit(i)){
+            if(Information.isDigit(i)){
                 reversePolish.push(i);
             }
             else if(operator.empty() || i.equals("(") || operator.peek().equals("(")){
@@ -27,13 +27,13 @@ public class RPN {
                 }
                 operator.pop();//将"("出栈
             }
-            else if(priority(i) > priority(operator.peek())){
+            else if(Information.priority(i) > Information.priority(operator.peek())){
                 operator.push(i);
             }
-            else if(priority(i) <= priority(operator.peek())){
+            else if(Information.priority(i) <= Information.priority(operator.peek())){
                 while(!operator.empty()
                         && !operator.peek().equals("(")
-                        && priority(i) <= priority(operator.peek())){
+                        && Information.priority(i) <= Information.priority(operator.peek())){
                     reversePolish.push(operator.pop());
                 }
                 operator.push(i);
@@ -72,25 +72,5 @@ public class RPN {
         }
 
         return newString;
-    }
-
-    public boolean isDigit(String num){
-        boolean flag = true;
-        char[] charOfNum = num.toCharArray();
-        for (char c : charOfNum) {
-            if(!Character.isDigit(c)){
-                flag = false;
-            }
-        }
-
-        return flag;
-    }
-
-    public int priority(String operator){
-        return switch (operator) {
-            case "+", "-" -> 0;
-            case "×", "÷", "*", "/" -> 1;
-            default -> -1;
-        };
     }
 }
