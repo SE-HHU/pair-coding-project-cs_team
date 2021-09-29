@@ -1,15 +1,17 @@
+package indi.csteam.mathxpro.generate;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
 /**
  * @author Derek
  * @version 1.00
- * @Description 转化为逆波兰表达式
+ * @Description 将字符串算式转化为逆波兰表达式，以栈的形式返回
  * @ClassName RPN.java
  * @date 12:52 2021/9/27
  */
 public class RPN {
-    public Stack<String> transformToRPN(String equation){
+    public static Stack<String> transformToRPN(String equation){
         Stack<String> operator = new Stack<>();
         Stack<String> reversePolish = new Stack<>();
         ArrayList<String> stringArray = toStringArray(equation);
@@ -52,7 +54,7 @@ public class RPN {
      * @param equation 算式的字符串表达
      * @return 转化后的算式
      */
-    public ArrayList<String> toStringArray(String equation){
+    public static ArrayList<String> toStringArray(String equation){
         ArrayList<String> newString = new ArrayList<>();
         char[] charOfEquation = equation.toCharArray();
         StringBuilder digit = new StringBuilder();

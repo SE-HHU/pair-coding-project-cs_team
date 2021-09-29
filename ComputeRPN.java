@@ -1,3 +1,5 @@
+package indi.csteam.mathxpro.generate;
+
 import java.util.Stack;
 
 /**
@@ -8,7 +10,12 @@ import java.util.Stack;
  * @date 15:10 2021/9/27
  */
 public class ComputeRPN {
-    public String getAnswer(Stack<String> RPNOfEqu){
+    public static String getAnswer(String equation){
+        ComputeRPN computer = new ComputeRPN();
+        return computer.AnswerFromStack(RPN.transformToRPN(equation));
+    }
+
+    public String AnswerFromStack(Stack<String> RPNOfEqu){
         Stack<String> result = new Stack<>();
         for(String str : RPNOfEqu){
             if(Information.isDigit(str)){
@@ -70,15 +77,20 @@ public class ComputeRPN {
     //分数除法
     public String divide(String a,String b){
         Fraction fa,fb,r;
-        if(Fraction.isFraction(a)|| Fraction.isFraction(b)){
+        if(Fraction.isFraction(a) || Fraction.isFraction(b)){
             fa = Fraction.transform(a);
+
             if(Fraction.isFraction(b)){
+                int endIndex = b.indexOf('/');
+                if(endIndex == -1){
+                    endIndex = b.indexOf('÷');
+                }
                 //b要转化为倒数
-                int bd = Integer.parseInt(b.substring(0,b.indexOf('÷'))),
-                        bn = Integer.parseInt(b.substring(b.indexOf('÷')+1));
-                fb = new Fraction(bn,bd);
+                int bd = Integer.parseInt(b.substring(0, endIndex)),
+                        bn = Integer.parseInt(b.substring(endIndex + 1));
+                fb = new Fraction(bn, bd);
             }
-            else fb = new Fraction(1,Integer.parseInt(b));
+            else fb = new Fraction(1, Integer.parseInt(b));
 
             r = new Fraction(fa.numerator*fb.numerator,fa.denominator*fb.denominator);
 

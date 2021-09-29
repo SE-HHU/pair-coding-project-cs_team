@@ -1,3 +1,5 @@
+package indi.csteam.mathxpro.generate;
+
 /**
  * @author Derek
  * @version 1.00
@@ -75,7 +77,7 @@ public class Fraction {
      * @return 布尔值作为判断结果
      */
     public boolean isFalseFraction(){
-        return numerator>denominator && Fraction.isFraction(getFraction());
+        return numerator > denominator && Fraction.isFraction(getFraction());
     }
 
     /**
@@ -86,7 +88,7 @@ public class Fraction {
     public static boolean isFraction(String s){
         int i = s.indexOf('÷');
         int j = s.indexOf('/');
-        return i != -1 || j!=-1;
+        return (i != -1 || j!=-1);
     }
 
     /**
@@ -96,18 +98,18 @@ public class Fraction {
      */
     public static Fraction transform(String a){
         Fraction fa;
-        if(Fraction.isFraction(a) && a.indexOf('÷')!=-1){
-            int an = Integer.parseInt(a.substring(0,a.indexOf('÷'))),
-                    ad = Integer.parseInt(a.substring(a.indexOf('÷')+1));
+
+        if(Fraction.isFraction(a)){
+            int endIndex = a.indexOf('/');
+            if(endIndex == -1){
+                endIndex = a.indexOf('÷');
+            }
+            int an = Integer.parseInt(a.substring(0,endIndex)),
+                    ad = Integer.parseInt(a.substring(endIndex + 1));
             fa = new Fraction(an,ad);
             return fa;
         }
-        if(Fraction.isFraction(a) && a.indexOf('/')!=-1){
-            int an = Integer.parseInt(a.substring(0,a.indexOf('/'))),
-                    ad = Integer.parseInt(a.substring(a.indexOf('/')+1));
-            fa = new Fraction(an,ad);
-            return fa;
-        }
+
         fa = new Fraction(Integer.parseInt(a),1);
 
         return fa;
