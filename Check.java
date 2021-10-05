@@ -6,7 +6,7 @@ import java.util.Stack;
 /**
  * @author Derek
  * @version 1.00
- * @Description TODO
+ * @Description to check for repeated equation
  * @ClassName Check.java
  * @date 20:10 2021/9/27
  */

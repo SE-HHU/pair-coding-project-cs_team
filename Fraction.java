@@ -3,7 +3,7 @@ package indi.csteam.mathxpro.generate;
 /**
  * @author Derek
  * @version 1.00
- * @Description TODO
+ * @Description to deal with fractions
  * @ClassName Fraction.java
  * @date 15:24 2021/9/27
  */

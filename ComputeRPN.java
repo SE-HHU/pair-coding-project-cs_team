@@ -5,7 +5,7 @@ import java.util.Stack;
 /**
  * @author Derek
  * @version 1.00
- * @Description
+ * @Description to compute by RPN
  * @ClassName ComputeRPN.java
  * @date 15:10 2021/9/27
  */

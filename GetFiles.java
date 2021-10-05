@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * @author Derek
  * @version 1.00
- * @Description to generate files of Exercises and Answer
+ * @Description to generate files of Exercises and Answers
  * @ClassName GetFiles.java
  * @date 16:28 2021/9/27
  */
