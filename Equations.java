@@ -5,8 +5,8 @@ import java.util.ArrayList;
 /**
  * @author Derek
  * @version 1.00
- * @Description TODO
- * @ClassName Eauqtions.java
+ * @Description 获取相应个数且符合需求的算式
+ * @ClassName Equations.java
  * @date 16:45 2021/9/27
  */
 public class Equations {
@@ -29,55 +29,46 @@ public class Equations {
      * @return 包含相应个数算式的List
      */
     public ArrayList<String> getEquations(){
+        ArrayList<String> equations = new ArrayList<>();// 保存生成的算式
         int operatorNum;// 运算符号个数
 
-        ArrayList<String> equations = new ArrayList<>();// 保存生成的算式
         int i = 0;
-
         /* 不含括号 */
         while(i < count && !hasBracket){
             operatorNum = (int)(Math.random() * OPE_NUM + 1);
 
-            String te = tempEqu(operatorNum);
+            String temp = tempEqu(operatorNum);//该方法生成的算式已经合法，无需再判断
             /* 已经有重复的算式 */
-            if(Check.contain(equations, te)){
+            if(Check.contain(equations, temp)){
                 continue;
             }
-            equations.add(te);
+            equations.add(temp);
+
             i++;
         }
 
         /* 含有括号 */
         while(i < count){
             operatorNum = (int)(Math.random() * OPE_NUM + 1);
+            String temp = "1+1";
 
             /* 只有一个运算符，无需添加括号 */
             if(operatorNum == 1){
-                String temp = tempEqu(operatorNum);
-                /* 已经有重复的算式 */
-                if(Check.contain(equations, temp)){
-                    continue;
-                }
-                equations.add(temp);
+                temp = tempEqu(operatorNum);
             }
-            /* 两个运算符 */
-            if(operatorNum == 2){
-                String temp = insertBrackets(tempEqu(operatorNum));
-                /* 已经有重复的算式 */
-                if(Check.contain(equations, temp)){
-                    continue;
-                }
-                equations.add(temp);
+            else if(operatorNum > 1){
+                temp = insertBrackets(tempEqu(operatorNum));
             }
-            /* 三个运算符 */
-            if(operatorNum == 3){
-                String temp = insertBrackets(tempEqu(operatorNum));
-                /* 已经有重复的算式 */
-                if(Check.contain(equations, temp)){
-                    continue;
-                }
-                equations.add(temp);
+            /* 判断算式及答案是否合法 */
+            if(!(Information.validEquation(temp)
+                    && Information.validAnswer(max,min, ComputeRPN.getAnswer(temp)))){
+                continue;
             }
+            /* 是否已经有重复的算式 */
+            if(Check.contain(equations, temp)){
+                continue;
+            }
+            equations.add(temp);
 
             i++;
         }
@@ -92,27 +83,49 @@ public class Equations {
      */
     public String tempEqu(int opeNum){
         int[] operator = new int[opeNum],digit = new int[opeNum+1];// 运算数据与符号
-        /* 先生成一个算式，判断合法性，直到生成合法算式 */
-        StringBuilder str;
-        until:
-        do{
-            for (int j = 0; j < opeNum; j++){
-                operator[j] = (int)(Math.random() * 4);
-            }
-            for (int j = 0; j < opeNum +1; j++){
-                digit[j] = (int)(Math.random() * (max-min+1) + min);
-            }
+        boolean breakPoint = false;//循环是否退出
 
-            str = new StringBuilder(String.valueOf(digit[0]));
-            for (int j = 0; j < opeNum; j++) {
-                str.append(ope[operator[j]]).append(digit[j+1]);
-                if(!(Information.validEquation(str.toString())
-                        && Information.validAnswer(max,min, ComputeRPN.getAnswer(str.toString())))){
-                    continue until;
+        StringBuilder str = new StringBuilder("1+1");
+        /* do-while循环代码块，生成一个算式，并判断合法性，直到生成合法算式 */
+        until:
+        while(!breakPoint){
+            /* 随机生成符号 */
+            for (int i = 0; i < opeNum; i++){
+                operator[i] = (int)(Math.random() * 4);
+            }
+            /* 随机生成数据 */
+            for (int i = 0; i < opeNum +1; i++){
+                /* 0参与四则运算实际意义不大 */
+                if(min <= 0){
+                    digit[i] = (int)(Math.random() * max + 1);//[1,max]
+                }
+                else{
+                    digit[i] = (int)(Math.random() * (max - min + 1) + min);//[min,max]
                 }
             }
-        }while(!(Information.validEquation(str.toString())
-                && Information.validAnswer(max,min, ComputeRPN.getAnswer(str.toString()))));
+
+            /* 将数据与符号进行拼接 */
+            str = new StringBuilder(String.valueOf(digit[0]));
+            for (int i = 0; i < opeNum; i++) {
+                /* 1× */
+                if(digit[i] == 1 && ope[operator[i]].equals("×")){
+                    continue until;
+                }
+                /* ×1或÷1 */
+                if(Information.priority(ope[operator[i]]) == 1 && digit[i +1] == 1){
+                    continue until;
+                }
+
+                str.append(ope[operator[i]]).append(digit[i +1]);
+            }
+
+            /* 判断算式及答案是否合法 */
+            if(!(Information.validEquation(str.toString())
+                    && Information.validAnswer(max,min, ComputeRPN.getAnswer(str.toString())))){
+                continue;
+            }
+            breakPoint = true;
+        }
 
         return str.toString();
     }
@@ -123,51 +136,61 @@ public class Equations {
      * @return 含有括号的算式
      */
     public String insertBrackets(String tempEqu){
-        /* 临时的（位置，更新数组下标 */
-        int tempBracket = 0, k = 0;
-        /* 是否出现过加减，是否出现过乘除，是否添加过临时（ */
-        boolean flag0 = false, flag1 = false, hasTB = false;
+        /* 临时的（位置，第二次遍历时的起始位置，临时括号前一位的运算符下标，更新数组下标 */
+        int tempBracket = 0, indexOfFirst = 0, before = 0, k = 0;
+        /* 是否出现过加减，是否添加过临时（，是否满足添加括号条件（后面出现了低一级或同级运算符） */
+        boolean flag0 = false, hasTB = false, flag = false;
         /* 括号的开始位置与结束位置 */
         int[] begin = new int[OPE_NUM], end = new int[OPE_NUM];
         char[] charTemp = tempEqu.toCharArray();
 
-        for (int j = 0; j < charTemp.length; j++) {
-            /* 不是数字，并且是乘除 */
-            if(!Character.isDigit(charTemp[j]) && Information.priority(charTemp[j]) == 1){
-                /* 第一次出现乘除，并且之前出现过加减 */
-                if(flag0 && !flag1){
-                    end[0] = j + 1;//begin[0]初始化已赋值为0
-                    k++;
-
-                    tempBracket = j + 1 + k*2;
-                    hasTB = true;
-                    flag0 = false;//之后重新判断是否出现过加减
-                    flag1 = true;
-                }
-                /* 在乘除后没有添加过临时（ */
+        /* 类似（1+2）*3的括号 */
+        for (int i = 0; i < charTemp.length; i++) {
+            /* 是乘除，并且之前出现过加减，并且没有出现过乘除 */
+            if(Information.priority(charTemp[i]) == 1 && flag0){
+                end[0] = i + 1;//begin[0]初始化已赋值为0
+                k++;
+                indexOfFirst = i;
+                before = i;
+                break;
+            }
+            if(Information.priority(charTemp[i]) == 0){
+                flag0 = true;
+            }
+            /* 如果运行至此句，则乘除号之前没有出现过加减 */
+            else if(Information.priority(charTemp[i]) == 1){
+                break;
+            }
+        }
+        /* 其他一般位置的括号 */
+        for (int i = indexOfFirst; i < charTemp.length; i++) {
+            /* 是运算符 */
+            if(Information.priority(charTemp[i]) != -1){
+                /* 没有添加过临时（ */
                 if(!hasTB){
-                    tempBracket = j + 1 + k*2;
+                    tempBracket = i + 1 + k*2;
                     hasTB = true;
-                    flag0 = false;
-                    flag1 = true;
+                    before = i;
                 }
-                /* 添加过临时（，并且出现过加减 */
-                else if(flag0){
+                /* 添加过临时（，并且满足添加括号条件 */
+                else if(flag){
                     /* 先记录下括号位置 */
                     begin[k] = tempBracket;
-                    end[k] = j + 1 + k*2;
+                    end[k] = i + 1 + k*2;
                     k++;
 
                     /* 再在当前乘除之后，添加新的临时（ */
-                    tempBracket = j + 1 + k*2;
+                    tempBracket = i+ 1 + k*2;
+                    before = i;
+                }
+                /* 满足添加括号的条件即为：后面出现了低一级或同级运算符 */
+                else if(Information.priority(charTemp[i]) <= Information.priority(charTemp[before])){
+                    flag = true;
                 }
             }
-            else if(!Character.isDigit(charTemp[j])){
-                flag0 = true;
-            }
         }
-        /* 添加过临时（，并且出现过加减，并且到了数组末尾 */
-        if(hasTB && flag0){
+        /* 到了数组末尾，并且添加过临时（，并且满足添加括号条件 */
+        if(hasTB && flag){
             begin[k] = tempBracket;
             end[k] = charTemp.length + 1 + k*2;
             k++;
@@ -176,7 +199,7 @@ public class Equations {
         StringBuilder result = new StringBuilder(tempEqu);
         for (int i = 0; i < k; i++) {
             /* 随机是否插入括号 */
-            int hasBracket = (int)(Math.random() * 2);
+            int hasBracket = 1;//(int)(Math.random() * 2);
             if(hasBracket == 1){
                 result.insert(begin[i], "(");
                 result.insert(end[i], ")");
