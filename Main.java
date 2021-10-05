@@ -26,7 +26,7 @@ public class Main {
         System.out.print("min=");
         int min = in.nextInt();
 
-        System.out.print("是否含括号：");
+        System.out.print("是否含括号(yes/no)：");
         String hasBracket = in.next();
 
         Equations e = new Equations(n,max,min, hasBracket.equals("yes"));
