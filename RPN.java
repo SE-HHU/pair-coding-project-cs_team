@@ -11,6 +11,11 @@ import java.util.Stack;
  * @date 12:52 2021/9/27
  */
 public class RPN {
+    /**
+     * 将中序表达式转化为逆波兰式，并分项存放到栈中
+     * @param equation 一个中序表达式，不含空格
+     * @return 存放了相应逆波兰式的栈
+     */
     public static Stack<String> transformToRPN(String equation){
         Stack<String> operator = new Stack<>();
         Stack<String> reversePolish = new Stack<>();
@@ -50,7 +55,7 @@ public class RPN {
     }
 
     /**
-     * 将算式中的数字和运算符分开存放为数组
+     * 将算式中的数字和运算符分开，并存放到表中
      * @param equation 算式的字符串表达
      * @return 转化后的算式
      */

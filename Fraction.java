@@ -92,8 +92,8 @@ public class Fraction {
     }
 
     /**
-     * 将整数转化为分母为1的分数，便于运算
-     * @param a 一个整数的字符串表达
+     * 将所有数转化为分数，将整数转化为分母为1的分数，便于运算
+     * @param a 一个数的字符串表达
      * @return 一个相应分数的实例对象
      */
     public static Fraction transform(String a){

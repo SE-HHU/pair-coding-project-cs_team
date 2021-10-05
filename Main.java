@@ -2,12 +2,11 @@ package indi.csteam.mathxpro.generate;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Stack;
 
 /**
  * @author Derek
  * @version 1.00
- * @Description TODO
+ * @Description for running
  * @ClassName Main.java
  * @date 14:11 2021/9/27
  */
@@ -30,7 +29,7 @@ public class Main {
         System.out.print("是否含括号：");
         String hasBracket = in.next();
 
-        Equations e = new Equations(n,max,min, hasBracket.equals("是"));
+        Equations e = new Equations(n,max,min, hasBracket.equals("yes"));
         ArrayList<String> equationList = e.getEquations();
 
         GetFiles.getExercises(equationList);

@@ -23,6 +23,7 @@ public class Information {
         return switch (operator) {
             case "+", "-" -> 0;
             case "×", "÷", "*", "/" -> 1;
+            case "(", ")" -> 2;
             default -> -1;
         };
     }
@@ -31,14 +32,12 @@ public class Information {
         return switch (operator) {
             case '+', '-' -> 0;
             case '×', '÷', '*', '/' -> 1;
+            case '(', ')' -> 2;
             default -> -1;
         };
     }
 
     public static boolean validEquation(String tempEqu){
-        if(tempEqu.equals("No Meaning!")){
-            return false;
-        }
         /* 算式出现异常 */
         try{
             ComputeRPN.getAnswer(tempEqu);
@@ -50,6 +49,13 @@ public class Information {
         return true;
     }
 
+    /**
+     * 前提说明：此方法与getAnswer()配合使用
+     * @param max，数据最大值
+     * @param min 数据最小值
+     * @param answer 算式答案
+     * @return 答案是否符合要求
+     */
     public static boolean validAnswer(int max, int min, String answer){
         if(answer.equals("No Meaning!")){
             return false;

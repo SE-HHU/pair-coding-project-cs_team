@@ -5,17 +5,27 @@ import java.util.Stack;
 /**
  * @author Derek
  * @version 1.00
- * @Description TODO
+ * @Description
  * @ClassName ComputeRPN.java
  * @date 15:10 2021/9/27
  */
 public class ComputeRPN {
+    /**
+     * 获取一个中序算式的计算结果
+     * @param equation 一个中序算式
+     * @return 相应的计算结果
+     */
     public static String getAnswer(String equation){
         ComputeRPN computer = new ComputeRPN();
-        return computer.AnswerFromStack(RPN.transformToRPN(equation));
+        return computer.answerFromStack(RPN.transformToRPN(equation));
     }
 
-    public String AnswerFromStack(Stack<String> RPNOfEqu){
+    /**
+     * 由逆波兰式计算算式结果
+     * @param RPNOfEqu 一个算式的逆波兰表达式
+     * @return 相应的计算结果
+     */
+    public String answerFromStack(Stack<String> RPNOfEqu){
         Stack<String> result = new Stack<>();
         for(String str : RPNOfEqu){
             if(Information.isDigit(str)){
@@ -38,7 +48,12 @@ public class ComputeRPN {
         return result.pop();
     }
 
-    //分数加法
+    /**
+     * 两个数的加法运算
+     * @param a 一个数
+     * @param b 另一个数
+     * @return 加法运算结果
+     */
     public String add(String a,String b){
         Fraction fa,fb,r;
         if(Fraction.isFraction(a)|| Fraction.isFraction(b)){
@@ -50,7 +65,13 @@ public class ComputeRPN {
         }
         else return String.valueOf(Integer.parseInt(a)+Integer.parseInt(b));
     }
-    //分数减法
+
+    /**
+     * 两个数的减法运算
+     * @param a 一个数
+     * @param b 另一个数
+     * @return 减法运算结果
+     */
     public String minus(String a,String b){
         Fraction fa,fb,r;
         if(Fraction.isFraction(a)|| Fraction.isFraction(b)){
@@ -62,7 +83,13 @@ public class ComputeRPN {
         }
         else return String.valueOf(Integer.parseInt(a)-Integer.parseInt(b));
     }
-    //分数乘法
+
+    /**
+     * 两个数的乘法运算
+     * @param a 一个数
+     * @param b 另一个数
+     * @return 乘法运算结果
+     */
     public String multiply(String a,String b){
         Fraction fa,fb,r;
         if(Fraction.isFraction(a)|| Fraction.isFraction(b)){
@@ -74,7 +101,13 @@ public class ComputeRPN {
         }
         else return String.valueOf(Integer.parseInt(a)*Integer.parseInt(b));
     }
-    //分数除法
+
+    /**
+     * 两个数的除法运算
+     * @param a 一个数
+     * @param b 另一个数
+     * @return 除法运算结果
+     */
     public String divide(String a,String b){
         Fraction fa,fb,r;
         if(Fraction.isFraction(a) || Fraction.isFraction(b)){

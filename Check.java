@@ -63,16 +63,16 @@ public class Check {
 
     /**
      * 将逆波兰式按优先级降序的方式重新排列，并且加和乘（满足交换律）的两个被操作数按升序的方式排列
-     * @param equation 任意逆波兰式，Stack
+     * @param RPNOfEquation 任意逆波兰式，Stack
      * @return 转换后的新逆波兰式，Stack
      */
-    public static Stack<String> transform(Stack<String> equation){
+    public static Stack<String> transform(Stack<String> RPNOfEquation){
         Stack<String> temp = new Stack<>();
         Stack<String> result = new Stack<>();
         boolean flag = false;//是否第一次取出过元素
         int numOfDigit = 0;//临时栈中数字个数
         int numOfTarget = 0;//下一步要取的数据个数
-        for(String str : equation){
+        for(String str : RPNOfEquation){
             /* str是数据（整数） */
             if(Information.isDigit(str)){
                 temp.push(str);

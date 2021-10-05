@@ -18,7 +18,7 @@ public class GetFiles {
         try {
             BufferedWriter bw1 = new BufferedWriter(new FileWriter(".\\Exercises.txt"));
             for (String s: equationList) {
-                bw1.write(k+". "+s+"=");
+                bw1.write(k + ". " + s + "=");
                 bw1.newLine();
                 bw1.flush();
                 k++;
