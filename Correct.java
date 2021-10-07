@@ -18,6 +18,7 @@ public class Correct {
      */
     public static void readFile(String exerciseName, String answerName){
         try {
+            /* 打开文件流 */
             FileReader exercise = new FileReader(exerciseName);
             FileReader answer = new FileReader(answerName);
             LineNumberReader lnrOfExercise = new LineNumberReader(exercise);
@@ -28,6 +29,7 @@ public class Correct {
             StringBuilder wrong = new StringBuilder("Wrong: (");//记录错误题目
             int sumOfCorrect = 0, sumOfWrong = 0;
 
+            /* 读取行的内容 */
             String equ = lnrOfExercise.readLine();
             String ans = lnrOfAnswer.readLine();
             while(equ != null && ans!= null){
@@ -47,9 +49,14 @@ public class Correct {
             correct = new StringBuilder(correct.substring(0, correct.length() - 1));
             wrong = new StringBuilder(wrong.substring(0, wrong.length() - 1));
             /* 补全信息 */
-            correct.append(")");
+            /* 如果个数为零，后面就不用加括号 */
+            if(sumOfCorrect != 0){
+                correct.append(")");
+            }
+            if(sumOfWrong != 0){
+                wrong.append(")");
+            }
             correct.insert(9, sumOfCorrect + " ");//冒号空格后，括号前
-            wrong.append(")");
             wrong.insert(7, sumOfWrong + " ");//冒号空格后，括号前
 
             /* 将信息写入Grade.txt */
@@ -182,6 +189,12 @@ public class Correct {
         return line.substring(begin);
     }
 
+    /**
+     * 将前一份文件内容复制到后一份中
+     * @param fileName0 被复制文件
+     * @param fileName1 复制文件
+     * @throws IOException 文件读写异常
+     */
     public static void copy(File fileName0, File fileName1) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName0));
         BufferedWriter bw = new BufferedWriter(new FileWriter(fileName1));
